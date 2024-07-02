@@ -40,8 +40,8 @@ def draw_border_and_corners(c, width, height):
 
 
 def draw_qr_code_and_text(c, qr_img, x, y, max_qr_width, max_qr_height, text, vertical_align='top'):
-    text_height = 30
-    font_size = 12
+    text_height = 40
+    font_size = 16
     with tempfile.NamedTemporaryFile(suffix=".png") as qr_file:
         qr_img.save(qr_file.name)
         qr_text_width = c.stringWidth(text, "Helvetica", font_size)
@@ -68,17 +68,18 @@ def add_page_to_pdf(c, url, password):
     password_qr_img = create_qr_code(password)
 
     width, height = A4
-    max_qr_width = max_qr_height = (height - 200) / 4  # Leave some margins
+    # Increase size for larger QR code and text
+    max_qr_width = max_qr_height = (height - 100) / 2
 
     draw_border_and_corners(c, width, height)
 
     # Calculate positions
     section_height = height / 2
     qr_x = width / 2 - max_qr_width / 2
-    url_y = section_height + (section_height / 2) - (max_qr_height / 2)
-    # Adjusted this value for proper centering
+    url_y = section_height + (section_height / 2) - (max_qr_height / 2) - 30
     password_y = section_height / 2 + \
-        (section_height / 2) - max_qr_height - 139
+        (section_height / 2) - max_qr_height / 2 - \
+        224
 
     draw_qr_code_and_text(c, url_qr_img, qr_x, url_y, max_qr_width,
                           max_qr_height, "URL", vertical_align='top')
