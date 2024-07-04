@@ -45,18 +45,13 @@ def draw_qr_code_and_text(c, qr_img, x, y, max_qr_width, max_qr_height, text, ve
     with tempfile.NamedTemporaryFile(suffix=".png") as qr_file:
         qr_img.save(qr_file.name)
         qr_text_width = c.stringWidth(text, "Helvetica", font_size)
-
-        # Calculate text position to center it
         text_x = x + (max_qr_width - qr_text_width) / 2
-
         if vertical_align == 'top':
             text_y = y + max_qr_height + 10
             qr_y = y
         else:
             text_y = y - text_height - 10
             qr_y = y - max_qr_height + 90  # Adjusted value for proper centering
-
-        # Draw text and QR code
         c.setFont("Helvetica", font_size)
         c.drawString(text_x, text_y, text)
         c.drawImage(qr_file.name, x, qr_y,
@@ -66,30 +61,20 @@ def draw_qr_code_and_text(c, qr_img, x, y, max_qr_width, max_qr_height, text, ve
 def add_page_to_pdf(c, url, password):
     url_qr_img = create_qr_code(url)
     password_qr_img = create_qr_code(password)
-
     width, height = A4
-    # Increase size for larger QR code and text
     max_qr_width = max_qr_height = (height - 100) / 2
-
-    draw_border_and_corners(c, width, height)
-
-    # Calculate positions
     section_height = height / 2
     qr_x = width / 2 - max_qr_width / 2
     url_y = section_height + (section_height / 2) - (max_qr_height / 2) - 30
     password_y = section_height / 2 + \
         (section_height / 2) - max_qr_height / 2 - \
         224
-
     draw_qr_code_and_text(c, url_qr_img, qr_x, url_y, max_qr_width,
                           max_qr_height, "URL", vertical_align='top')
     draw_qr_code_and_text(c, password_qr_img, qr_x, password_y,
                           max_qr_width, max_qr_height, "Senha", vertical_align='top')
-
-    # Draw the middle line
     c.setLineWidth(3)
     c.line(10, height / 2, width - 10, height / 2)
-
     c.showPage()
 
 
